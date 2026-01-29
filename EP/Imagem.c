@@ -23,11 +23,24 @@ struct imagem {
  * @return Imagem* Ponteiro para a imagem alocada
  */
 Imagem *alocaImagem(int largura, int altura){
-    AVISO(Imagem.c : Ainda não implementei a função 'alocaImagem'); // Retire esssa mensagem ao implementar a fução
+
+    if (altura <= 0 || largura <= 0) return NULL;
+
+    Imagem *img = malloc(sizeof(Imagem));
+    if (img == NULL) {
+        printf("Não foi possivel alocar a imagem");
+        exit(1);
+    }
+    img->largura = largura;
+    img->altura = altura;
+    img->maxval = 255;
     
-    // Com você :)
-    
-    return NULL;
+    img->pixel = calloc(altura, sizeof(Cor *));
+    for (int i = 0; i < altura; i++) {
+        img->pixel[i] = calloc(largura, sizeof(Cor));
+    }
+
+    return img;
 }
 
 /**
@@ -36,10 +49,16 @@ Imagem *alocaImagem(int largura, int altura){
  * @param img Ponteiro para a imagem a ser liberada.
  */
 void liberaImagem(Imagem *img){
-    AVISO(Imagem.c: Ainda não implementei a função 'liberaImagem'); //Retire esssa mensagem ao implementar a fução
+    if (img == NULL) return;
 
-    // Com você :)
-   
+    if (img->pixel){
+        for (int i = 0; i < img->altura; i++){
+            free(img->pixel[i]);
+        }   
+        free(img->pixel);
+    }
+
+    free(img);
 }
 
 /**
@@ -91,11 +110,32 @@ Cor obtemCorPixel(Imagem *img, int l, int c){
  * @return Imagem* Ponteiro para a imagem copiada
  */
 Imagem* copiaImagem(Imagem *origem){
-    AVISO(Imagem.c: Ainda não implementei a função 'copiaImagem'); //Retire esssa mensagem ao implementar a fução
 
-    // Lembre-se de verificar se a imagem de origem foi alocada (origem diferente de NULL).
-    // Com você :)
-    return NULL;
+    if (origem == NULL) {
+        return NULL;
+    }
+
+    Imagem *novaImg = malloc(sizeof(Imagem));
+    novaImg->altura = origem->altura;
+    novaImg->largura = origem->largura;
+    novaImg->maxval = origem->maxval;
+    
+    novaImg->pixel = calloc(origem->altura, sizeof(Cor *)); 
+
+    for (int i = 0; i < origem->altura; i++) {
+        novaImg->pixel[i] = calloc(origem->largura, sizeof(Cor));
+    }
+
+    for (int i = 0; i < origem->altura; i++) {
+        for (int j = 0; j < origem->largura; j++) {
+            novaImg->pixel[i][j].r = origem->pixel[i][j].r;
+            novaImg->pixel[i][j].g = origem->pixel[i][j].g;
+            novaImg->pixel[i][j].b = origem->pixel[i][j].b;
+        }
+    }
+    
+
+return novaImg;
 }
 
 /**
